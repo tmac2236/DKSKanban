@@ -1,7 +1,7 @@
-.vscode
+.vs
 bin
 obj
 *.db
 *.dll
 *.pdb
-.API.pdb
+*.cache

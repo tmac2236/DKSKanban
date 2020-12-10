@@ -424,7 +424,7 @@
 
             showPage(tmpdata, tmptqcdata, tmppage, tmpmessage, procpage);
         };
-        function showPage(tem, item1, itempage, itemmessage, procpage) {
+        function showPage(item, item1, itempage, itemmessage, procpage) {
             var flag = 'A'
             if (kanbanindex > itempage)
                 flag = 'B'
@@ -489,12 +489,15 @@
                 for (var i = PageCount - 10; i < PageCount; i++) {
                     var colorStatus = item[i].PRODUCESTATUS;
                     var colorName;
-                    if (colorStatus == 'On Process') {
+                    if (colorStatus == 'On Process' || colorStatus == 'Cutting&Preparation&Stitching') {
                         colorName = " class='color-blue' ";
                     } else if (colorStatus == 'Complete') {
                         colorName = " class='color-green' ";
-                    } else {
+                        // Cutting&Preparation&Stitching多一個空白鍵代表暫停狀態
+                    } else if (colorStatus == 'Waiting' || colorStatus == 'Cutting&Preparation&Stitching ') {
                         colorName = " class='color-yellow' ";
+                    } else {
+                        colorName = " class='color-white' "; //debug用
                     }
                     $('#body').append(
                         "<tr><td align = 'left'>" + item[i].MODELNAME + "</td>" +
@@ -521,12 +524,15 @@
                 for (var i = PageCount - 10; i < item.length; i++) {
                     var colorStatus = item[i].PRODUCESTATUS;
                     var colorName;
-                    if (colorStatus == 'On Process') {
+                    if (colorStatus == 'On Process' || colorStatus == 'Cutting&Preparation&Stitching') {
                         colorName = " class='color-blue' ";
                     } else if (colorStatus == 'Complete') {
                         colorName = " class='color-green' ";
-                    } else {
+                       // Cutting&Preparation&Stitching多一個空白鍵代表暫停狀態
+                    } else if (colorStatus == 'Waiting' || colorStatus == 'Cutting&Preparation&Stitching ') {
                         colorName = " class='color-yellow' ";
+                    } else {
+                        colorName = " class='color-white' "; //debug用
                     }
                     $('#body').append(
                         "<tr><td align = 'left'>" + item[i].MODELNAME + "</td>" +
