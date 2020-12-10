@@ -1,0 +1,214 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>KanBan</title>
+    <link href="Scripts/main.css" rel="stylesheet" />
+    <script src="Scripts/jquery-3.3.1.min.js"></script>
+    <script src="Scripts/jquery.getUrlParam.js"></script>
+</head>
+<body>
+    <table border="0" cellspacing="0" cellpadding="0" class="outer-frame">
+        <tr>
+            <td>
+
+                <table id="head" border="0" cellspacing="0" cellpadding="0" class="inner-frame rom-1"></table>
+
+            </td>
+        </tr>
+    </table>
+
+    <!-- data 1 -->
+
+    <table border="0" cellspacing="0" cellpadding="0" class="outer-frame">
+        <tr>
+            <td>
+
+                <table id="body" border="0" cellspacing="0" cellpadding="0" class="inner-frame rom-2"></table>
+
+            </td>
+        </tr>
+    </table>
+    <table border="0" cellspacing="0" cellpadding="0" class="inner-frame rom-page">
+        <tr class="page-ui">
+            <td id="pageInfo">  </td>
+        </tr>
+
+    </table>
+
+
+
+
+
+    <script type="text/javascript">
+            var PageCount = 10;
+            var currentPage = 0;
+            var totalPage = 0;
+            var param;
+            var data;
+            var NowDate = new Date();
+            NowDate = NowDate.getMonth() + '-' + NowDate.getDay() + '-' + NowDate.getFullYear();
+       
+            if (!($(document).getUrlParam("LINEID"))) {
+                param = 'ST1';
+            }
+            else {
+                param = $(document).getUrlParam("LINEID");
+            }
+            
+            if (param == 'ST1') {
+                urlstring = "getKanbanDataByLine.aspx/GetData1";
+            }
+            else if (param == 'ST2') {
+                urlstring = "getKanbanDataByLine.aspx/GetData2";
+            }
+            else if (param == 'ST3') {
+                urlstring = "getKanbanDataByLine.aspx/GetData3";
+            }
+                else if (param == 'ST4') {
+                urlstring = "getKanbanDataByLine.aspx/GetData4";
+            }
+                else if (param == 'ST5') {
+                urlstring = "getKanbanDataByLine.aspx/GetData5";
+            }
+                else if (param == 'ASY') {
+                urlstring = "getKanbanDataByLine.aspx/GetData6";
+            }
+            else if (param == 'STF') {
+                urlstring = "getKanbanDataByLine.aspx/GetData7";
+            }
+            $("body").click(function () {
+                showGrid();
+            });
+
+
+        $(function () {
+            $.ajax({
+                type: "POST",
+                url: urlstring,   //存取Json的網址
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    data = $.parseJSON(response.d.Data);
+                    totalPage = Math.ceil(data.length / PageCount);
+                    showHead();
+                    showGrid();
+                },
+                error: function () {
+                    alert("ERROR!!!");
+                }
+            });
+            
+            setInterval(function () {
+                showHead();
+                showGrid();
+            }
+                , 10000);
+
+            setInterval(function () {
+                location.reload();
+            }
+                , 300000);
+        })
+
+            
+            function showHead() {
+                
+                if (data) {
+                    $('#pageInfo').text(" No Data !!! ");
+                }
+                
+                $('#head').empty();
+                $('#head').append(
+                    "<tr><td>Line</td><td>Date</td><td>Responsibility</td><td>DL</td>" +
+                    "</tr>");
+                $('#head').append("<tr>" +
+                    "<td>" + data[1].LINE_ID + "</td>" +
+                    "<td>" + NowDate + "</td>" +
+                    "<td>" + data[1].MANINCGARGE + "</td>" +
+                    "<td>" + data[1].DL + "</td>" +
+                    "</tr>");
+                
+            }
+
+            function showGrid() {
+                var isLast = false;
+                
+                ++currentPage;
+                if ((PageCount < data.length) && PageCount >= 10) {
+                    $('#body').empty();
+                    $('#body').append(
+                    "<tr class='text-direction-t'><td> Model Name </td> <td>  Model ID  </td>"+
+                    "<td> Order # </td><td> Size </td><td> PlanQty </td>"+
+                    "<td> Status </td><td> Actual Optput  </td>" +
+                    "<td> RFT </td> </tr>");
+                    for (var i = PageCount - 10; i < PageCount; i++) {
+                        var colorStatus = data[i].PRODUCESTATUS;
+                        var colorName;
+                        if (colorStatus =='On Process') {
+                            colorName = " class='color-blue' ";
+                        } else if (colorStatus== 'Complete') {
+                            colorName = " class='color-green' ";
+                        } else  {
+                            colorName = " class='color-yellow' ";
+                        }
+                        $('#body').append(
+                            "<tr><td>" + data[i].MODELNAME + "</td>" +
+                            "<td>" + data[i].MODELNO + "</td>" +
+                            "<td>" + data[i].SAMPLENO + "</td>" +
+                            "<td>" + data[i].PRODSIZE + "</td>" +
+                            "<td>" + data[i].PLANQTY + "</td>" +
+                            "<td" + colorName+">" + data[i].PRODUCESTATUS + "</td>" +
+                            "<td>" + data[i].PRODUCEQTY + "</td>" +
+                            "<td>" + data[i].RTF + "%</td></tr>");
+                    }
+                }
+                if (totalPage>0) {
+                    $('#pageInfo').text(" Page:" + currentPage + " /" + " Total Page:" + totalPage);
+                }
+                
+                
+                if (PageCount >= data.length) {
+                    ++currentPage;
+                    $('#body').empty();
+                    $('#body').append(
+                        "<tr class='text-direction-t'><td> Model Name </td> <td>  Model ID </td>" +
+                        "<td> Order # </td><td> Size</td><td> PlanQty </td>" +
+                        "<td> Status </td><td> Actual Optput  </td>" +
+                        "<td> RFT </td> </tr>");
+                    for (var i = PageCount - 10; i < data.length; i++) {
+                        var colorStatus = data[i].PRODUCESTATUS;
+                        var colorName;
+                        if (colorStatus == 'On Process') {
+                            colorName = " class='color-blue' ";
+                        } else if (colorStatus== 'Complete') {
+                            colorName = " class='color-green' ";
+                        } else {
+                            colorName = " class='color-yellow' ";
+                        }
+                        $('#body').append(
+                            "<tr><td>" + data[i].MODELNAME + "</td>" +
+                            "<td>" + data[i].MODELNO + "</td>" +
+                            "<td>" + data[i].SAMPLENO + "</td>" +
+                            "<td>" + data[i].PRODSIZE + "</td>" +
+                            "<td>" + data[i].PLANQTY + "</td>" +
+                            "<td" + colorName + ">" + data[i].PRODUCESTATUS + "</td>" +
+                            "<td>" + data[i].PRODUCEQTY + "</td>" +
+                            "<td>" + data[i].RTF + "%</td></tr>");
+                    }
+                    isLast = true;
+                    PageCount = 10;
+                    currentPage = 0;
+                }
+                if (isLast == false) {
+                    PageCount += 10;
+                }
+
+            }
+
+
+    </script>
+
+
+</body>
+</html>

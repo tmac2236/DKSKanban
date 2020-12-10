@@ -1,0 +1,222 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <script src="Scripts/jquery-3.3.1.min.js"></script>
+    <script src="Scripts/jquery.getUrlParam.js"></script>
+    <style>
+        body {
+            background-color: #2183da;
+            margin: 0pc;
+            padding: 0px;
+            font-family: \5FAE\8EDF\6B63\9ED1\9AD4, SealmemoryHeader,"DFKai-sb","Microsoft JhengHei", serif;
+        }
+
+        .head-from {
+            width: 94%;
+            padding-left: 3%;
+            padding-right: 3%;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+
+            .head-from h1 {
+                width: 100%;
+                font-size: 160%;
+                line-height: 120%;
+                font-weight: bold;
+                color: #fff;
+                text-decoration: none;
+            }
+
+        .table-head {
+            font-size: 100%;
+            line-height: 40px;
+            font-weight: bold;
+            color: #666;
+            text-align: center;
+            text-decoration: none;
+            background-color: #FFF;
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+        }
+
+            .table-head td {
+                text-shadow: 0 1px 0 #fff;
+                padding-top: 0px !important;
+                padding-bottom: 0px !important;
+                background-color: #f8f8f8 !important;
+                background-image: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#d1cfd0)) !important;
+                background-image: -webkit-linear-gradient(top, #f8f8f8, #d1cfd0) !important;
+                background-image: -moz-linear-gradient(top, #f8f8f8, #d1cfd0) !important;
+                background-image: -ms-linear-gradient(top, #f8f8f8, #d1cfd0) !important;
+                background-image: -o-linear-gradient(top, #f8f8f8, #d1cfd0) !important;
+                background-image: linear-gradient(top, #f8f8f8, #d1cfd0) !important;
+            }
+
+        .table-row {
+            font-size: 120%;
+            line-height: 40px;
+            font-weight: bold;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            text-align: center;
+        }
+
+            .table-row tr td {
+                padding-top: 10px;
+                padding-bottom: 10px;
+                border-bottom-width: 2px;
+                border-bottom-style: solid;
+                border-bottom-color: #498cc8;
+            }
+
+            .table-row tr {
+                background-color: #1c6fba;
+            }
+
+                .table-row tr:nth-child(odd) {
+                    background-color: #1961a2;
+                }
+
+        .pageInfoClass {
+            font-size: 100%;
+            line-height: 40px;
+            font-weight: bold;
+            color: #666;
+            text-decoration: none;
+            text-shadow: 0 1px 0 #fff;
+            padding-top: 0px !important;
+            padding-bottom: 0px !important;
+            background-color: #f8f8f8 !important;
+            background-image: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#d1cfd0)) !important;
+            background-image: -webkit-linear-gradient(top, #f8f8f8, #d1cfd0) !important;
+            background-image: -moz-linear-gradient(top, #f8f8f8, #d1cfd0) !important;
+            background-image: -ms-linear-gradient(top, #f8f8f8, #d1cfd0) !important;
+            background-image: -o-linear-gradient(top, #f8f8f8, #d1cfd0) !important;
+            background-image: linear-gradient(top, #f8f8f8, #d1cfd0) !important;
+        }
+    </style>
+    <title>KanBan</title>
+</head>
+<body>
+    <div class="head-from">
+        <h1 id="htext"> 皮料 </h1>
+    </div>
+
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-row">
+        <tr class="table-head">
+            <td>儲位</td>
+            <td>料號</td>
+            <td>材料名稱</td>
+            <td>數量	</td>
+            <td>單位</td>
+            <td>廠商名稱</td>
+            <td>Release</td>
+        </tr>
+            
+        <tbody id="body"></tbody>
+
+    </table>
+    <div id="pageInfo" class="pageInfoClass"></div>
+        <script type="text/javascript">
+            var PageCount = 10;
+            var currentPage = 0;
+            var totalPage = 0;
+            var param = $(document).getUrlParam("type");
+            var urlstring = "getKanbanData.aspx/GetData1";
+            if (param=='1') {
+                $("#htext").text("皮料");
+            }
+            else if (param == '2') {
+                $("#htext").text("合成皮");
+                urlstring = "getKanbanData.aspx/GetData2";
+            }
+            else if (param == '3') {
+                $("#htext").text("網布");
+                urlstring = "getKanbanData.aspx/GetData3";
+            }
+
+            var data;
+            $(function () {
+                $.ajax({
+                    type: "POST",
+                    url: urlstring,   //存取Json的網址
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        data = $.parseJSON(response.d.Data);
+                        totalPage =Math.ceil(data.length/PageCount);
+                        showGrid();
+
+                    },
+                    error: function () {
+                        alert("ERROR!!!");
+                    }
+                });
+
+                setInterval(function () {
+                    showGrid();
+                }
+                    , 10000);
+
+                setInterval(function () {
+                    location.reload();
+                }
+                    , 1200000);
+
+            });
+
+            $("body").click(function () {
+                showGrid();
+            });
+
+            function showGrid() {
+                var isLast = false;
+                ++currentPage;
+                if ((PageCount < data.length) && PageCount >= 10) {
+                    $('#body').empty();
+                    for (var i = PageCount - 10; i < PageCount; i++) {
+                        $('#body').append(
+                            "<tr><td>" + data[i].storep + "</td>" +
+                            "<td>" + data[i].itnbr + "</td>" +
+                            "<td align='left'>" + data[i].itnena + "</td>" +
+                            "<td>" + data[i].qty + "</td>" +
+                            "<td>" + data[i].eunit + "</td>" +
+                            "<td>" + data[i].vendna + "</td>" +
+                            "<td>" + data[i].release + "</td></tr>");
+                    }
+                }
+                if (totalPage>0) {
+                    $('#pageInfo').text(" Page:" + currentPage + " /" + " Total Page:" + totalPage);
+                }
+                
+
+                if (PageCount >= data.length) {
+                    ++currentPage;
+                    $('#body').empty();
+                    for (var i = PageCount - 10; i < data.length; i++) {
+                        $('#body').append(
+                            "<tr><td>" + data[i].storep + "</td>" +
+                            "<td>" + data[i].itnbr + "</td>" +
+                            "<td align='left'>" + data[i].itnena + "</td>" +
+                            "<td>" + data[i].qty + "</td>" +
+                            "<td>" + data[i].eunit + "</td>" +
+                            "<td>" + data[i].vendna + "</td>" +
+                            "<td>" + data[i].release + "</td></tr>");
+                    }
+                    isLast = true;
+                    PageCount = 10;
+                    currentPage = 0;
+                }
+                if (isLast == false) {
+                    PageCount += 10;
+                }
+
+            }
+
+
+        </script>
+</body>
+</html>

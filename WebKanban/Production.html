@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>KanBan</title>
+    <link href="Scripts/main.css" rel="stylesheet" />
+    <script src="Scripts/jquery-3.3.1.min.js"></script>
+    <script src="Scripts/jquery.getUrlParam.js"></script>
+</head>
+<body>
+    <table border="0" cellspacing="0" cellpadding="0" class="outer-frame">
+        <tr>
+            <td>
+
+                <table id="head" border="0" cellspacing="0" cellpadding="0" class="inner-frame rom-1">
+                    
+                    
+                </table>
+
+            </td>
+        </tr>
+    </table>
+
+    <!-- data 1 -->
+
+    <table border="0" cellspacing="0" cellpadding="0" class="outer-frame">
+        <tr>
+            <td>
+
+                <table id="body" border="0" cellspacing="0" cellpadding="0" class="inner-frame rom-2">
+                    
+
+                </table>
+
+            </td>
+        </tr>
+    </table>
+    <table border="0" cellspacing="0" cellpadding="0" class="inner-frame rom-page">
+        <tr class="page-ui">
+            <td id="pageInfo">  </td>
+        </tr>
+
+    </table>
+
+
+
+
+   
+    <script type="text/javascript">
+            var PageCount = 10;
+            var currentPage = 0;
+            var totalPage = 0;
+            var param;
+            var data=[];
+            
+            if (!($(document).getUrlParam("LINEID"))) {
+                param = 'ST1';
+            }
+            else {
+                param = $(document).getUrlParam("LINEID");
+            }
+            alert(param);
+            $("body").click(function () {
+                showGrid();
+            });
+        
+
+        $(function () {
+            if (param === 'ST1' || param === 'ST2') {
+                $.ajax({
+                    type: "POST",
+                    url: "getKanbanData.aspx/GetData1",   //存取Json的網址
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        data.push($.parseJSON(response.d.Data));
+                    },
+                    error: function () {
+                        alert("ERROR!!!");
+                    }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "getKanbanData.aspx/GetData2",   //存取Json的網址
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        data.push($.parseJSON(response.d.Data));
+                    },
+                    error: function () {
+                        alert("ERROR!!!");
+                    }
+                }); 
+            }
+            else if (param === 'ST3' || param === 'ST4' || param === 'ST5') {
+                $.ajax({
+                    type: "POST",
+                    url: "getKanbanData.aspx/GetData3",   //存取Json的網址
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        data.push($.parseJSON(response.d.Data));
+                    },
+                    error: function () {
+                        alert("ERROR!!!");
+                    }
+                }); 
+                $.ajax({
+                    type: "POST",
+                    url: "getKanbanData.aspx/GetData4",   //存取Json的網址
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        data.push($.parseJSON(response.d.Data));
+                    },
+                    error: function () {
+                        alert("ERROR!!!");
+                    }
+                }); 
+                $.ajax({
+                    type: "POST",
+                    url: "getKanbanData.aspx/GetData5",   //存取Json的網址
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        data.push($.parseJSON(response.d.Data));
+                    },
+                    error: function () {
+                        alert("ERROR!!!");
+                    }
+                }); 
+            }
+
+
+
+                setInterval(function () {
+                    showAll();
+                }
+                    , 10000);
+
+                setInterval(function () {
+                    location.reload();
+                }
+                    , 1200000);
+        })
+
+            function showAll() {
+                for (var i = 0; i < data.length; i++) {
+
+                }
+            }
+            function showHead() {
+                $('#head').empty();
+                $('#head').append(
+                    "<tr>< td > Line(線別)</td ><td>Date(日期)</td><td>Responsibility(負責人)</td><td></td>" +
+                    "</tr >");
+                $('#head').append("<tr>" +
+                    "<td>" + data[PageCount-10].LINE_ID+"</td>" +
+                    "<td>" + data[PageCount-10].PRODDATE+ "</td>" +
+                    "<td></td><td></td></tr>");
+            }
+            
+            function showGrid() {
+                var isLast = false;
+                ++currentPage;
+                if ((PageCount < data.length) && PageCount >= 10) {
+                    $('#body').empty();
+                    $('#body').append(
+                    "<tr class='text-direction-t'><td> Model Name <br> (型體名稱) </td> <td>  Model ID <br> (型體代碼) </td>"+
+                    "<td> Order # <br> (樣品單號) </td><td> Size <br> (尺寸) </td><td> PlanQty <br> (目標量) </td>"+
+                    "<td> Status <br>(生產狀態) </td><td> Actual Optput  <br> (當日實際產量) </td>" +
+                    "<td> DL <br> (直接人力) </td> <td> RFT <br>(初始良率) </td> </tr>");
+                    for (var i = PageCount - 10; i < PageCount; i++) {
+
+                        $('#body').append(
+                            "<tr><td>" + data[i].MODELNAME + "</td>" +
+                            "<td>" + data[i].MODELNO + "</td>" +
+                            "<td>" + data[i].SAMPLENO + "</td>" + 
+                            "<td>" + data[i].PRODSIZE + "</td>" +
+                            "<td>" + data[i].PLANQTY + "</td>" +
+                            "<td>" + data[i].PRODUCESTATUS + "</td>" +
+                            "<td>" + data[i].PRODUCEQTY + "</td>" +
+                            "<td>" + data[i].DL + "</td>" +
+                            "<td>" + data[i].RTF + "</td></tr>");
+                    }
+                }
+                if (totalPage>0) {
+                    $('#pageInfo').text(" Page:" + currentPage + " /" + " Total Page:" + totalPage);
+                }
+
+
+                if (PageCount >= data.length) {
+                    ++currentPage;
+                    $('#body').empty();
+                    for (var i = PageCount - 10; i < data.length; i++) {
+                        $('#body').append(
+                            "<tr><td>" + data[i].storep + "</td>" +
+                            "<td>" + data[i].itnbr + "</td>" +
+                            "<td align='left'>" + data[i].itnena + "</td>" +
+                            "<td>" + data[i].qty + "</td>" +
+                            "<td>" + data[i].eunit + "</td>" +
+                            "<td>" + data[i].vendna + "</td>" +
+                            "<td>" + data[i].release + "</td></tr>");
+                    }
+                    isLast = true;
+                    PageCount = 10;
+                    currentPage = 0;
+                }
+                if (isLast == false) {
+                    PageCount += 10;
+                }
+
+            }
+
+
+    </script>
+
+
+</body>
+</html>

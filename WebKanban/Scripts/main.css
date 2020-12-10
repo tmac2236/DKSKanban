@@ -1,0 +1,300 @@
+﻿body {
+    background: #404040;
+    font-family: \5FAE\8EDF\6B63\9ED1\9AD4, SealmemoryHeader,"DFKai-sb","Microsoft JhengHei", serif;
+}
+
+body, html {
+    height: 100%;
+}
+
+html, body, div, ul, ol, li, dl, dt, dd, h1, h2, h3, h4, h5, h6, pre, form, p, blockquote, fieldset, input {
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6, pre, code, address, caption, cite, code, em, strong, th {
+    font-size: 1em;
+    font-weight: normal;
+    font-style: normal;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+fieldset, img {
+    border: none;
+}
+
+abbr, acronym {
+    border: 0;
+}
+
+samp, small, em {
+    font-family: \5FAE\8EDF\6B63\9ED1\9AD4, SealmemoryHeader,"DFKai-sb","Microsoft JhengHei", serif;
+}
+/* 主選單 */
+
+
+/**/
+.outer-frame {
+    width: 100%;
+    text-align: center;
+    background-color: #fff;
+    float: left;
+    border: 1px solid #333;
+}
+
+.inner-frame {
+    width: 100%;
+    background-color: #404040;
+}
+
+    .inner-frame td {
+        border-right-width: 1px;
+        border-top-style: none;
+        border-right-style: solid;
+        border-left-style: none;
+        border-right-color: #fff;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+        border-bottom-color: #fff;
+    }
+
+.hide-frame td {
+    border-right-width: 0px;
+    border-top-style: none;
+    border-right-style: solid;
+    border-left-style: none;
+    border-right-color: #fff;
+    border-bottom-width: 0px;
+    border-bottom-style: solid;
+    border-bottom-color: #fff;
+}
+
+/**/
+.rom-1 {
+    color: #fff;
+    text-align: right;
+    font-size: 120%;
+    line-height: 30px;
+}
+
+    .rom-1 td {
+        padding-right: 10px;
+    }
+
+        .rom-1 td:nth-child(1) {
+            width: 20%;
+        }
+
+        .rom-1 td:nth-child(2) {
+            width: 20%;
+        }
+
+        .rom-1 td:nth-child(3) {
+            width: 20%;
+        }
+
+        .rom-1 td:nth-child(4) {
+            width: 20%;
+        }
+
+        .rom-1 td:nth-child(5) {
+            width: 20%;
+        }
+/**/
+.rom-2 {
+    color: #fff;
+    font-size: 120%;
+    line-height: 30px;
+}
+
+    .rom-2 td {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+        .rom-2 td:nth-child(1) {
+            width: 30%;
+            text-align: left;
+        }
+
+        .rom-2 td:nth-child(2) {
+            width: 10%;
+            text-align: left;
+        }
+
+        .rom-2 td:nth-child(3) {
+            width: 20%;
+        }
+
+        .rom-2 td:nth-child(4) {
+            width: 10%;
+            text-align: right;
+        }
+
+        .rom-2 td:nth-child(5) {
+            width: 10%;
+            text-align: center;
+        }
+
+        .rom-2 td:nth-child(6) {
+            width: 10%;
+            text-align: right;
+        }
+
+        .rom-2 td:nth-child(7) {
+            width: 10%;
+            text-align: right;
+        }
+
+    /*.rom-2 td:nth-child(8) {
+            width: 10%;
+            text-align: right;
+        }
+
+        .rom-2 td:nth-child(9) {
+            width: 10%;
+            text-align: right;
+        }
+
+        .rom-2 td:nth-child(10) {
+            width: 10;
+            text-align: right;
+        }*/
+
+    .rom-2 .text-direction-t td {
+        text-align: center;
+        font-size: 120 %;
+        line-height: 20px;
+        text-decoration: none;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+
+/**/
+.color-yellow {
+    background-color: #ffc000;
+}
+
+.color-green {
+    background-color: #00b050;
+}
+
+.color-blue {
+    background-color: #0070c0;
+}
+
+.color-red {
+    background-color: #00DDDD;
+}
+
+/* 3 */
+
+/**/
+.rom-3 {
+    color: #fff;
+    font-size: 120%;
+    line-height: 30px;
+}
+
+    .rom-3 td {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+        .rom-3 td:nth-child(1) {
+            width: 20%;
+            text-align: center;
+        }
+
+        .rom-3 td:nth-child(2) {
+            width: 60%;
+            text-align: left;
+        }
+
+        .rom-3 td:nth-child(3) {
+            width: 20%;
+            text-align: center;
+        }
+
+    .rom-3 .text-direction-t td {
+        text-align: center;
+        font-size: 120%;
+        line-height: 20px;
+        text-decoration: none;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+.img-rom {
+    text-align: left;
+    background-color: #404040;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    padding-left: 5%;
+    padding-right: 5%;
+    border: 0;
+}
+
+    .img-rom img {
+        width: 350px;
+        height: auto;
+        margin-left: auto;
+        margin-right: auto;
+        border: 0;
+    }
+
+/**/
+
+.rom-page {
+    width: 100%;
+    display: inline-block;
+}
+
+    .rom-page tbody {
+        width: 98%;
+        display: inline-block;
+        background-color: #222;
+        margin-left: 1%;
+        margin-right: 1%;
+        margin-top: 15px;
+        -moz-border-radius: 5px; /* Firefox */
+        -webkit-border-radius: 5px; /* Safari, Chrome */
+        -khtml-border-radius: 5px; /* Konqueror */
+        border-radius: 5px; /* Opera 10.50 and later (CSS3 standard) */
+        behavior: url(border-radius.htc); /* IE6, IE7, IE8 */
+    }
+
+        .rom-page tbody td {
+            width: 97%;
+            padding-left: 1.5%;
+            padding-right: 1.5%;
+            display: inline-block;
+            border-top-style: none;
+            border-right-style: none;
+            border-bottom-style: none;
+            border-left-style: none;
+        }
+
+
+.pageInfoClass {
+    font-size: 120%;
+    text-align: center;
+    line-height: 40px;
+    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #fff;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    background-color: #404040 !important;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#404040), to(#404040)) !important;
+    background-image: -webkit-linear-gradient(top, #404040, #404040) !important;
+    background-image: -moz-linear-gradient(top, #404040, #404040) !important;
+    background-image: -ms-linear-gradient(top, #404040, #404040) !important;
+    background-image: -o-linear-gradient(top, #404040,#404040) !important;
+    background-image: linear-gradient(top, #404040, #404040) !important;
+}

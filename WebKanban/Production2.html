@@ -1,0 +1,615 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>KanBan</title>
+    <link href="Scripts/main.css" rel="stylesheet" />
+    <script src="Scripts/jquery-3.3.1.min.js"></script>
+    <script src="Scripts/jquery.getUrlParam.js"></script>
+</head>
+<body>
+    <table border="0" cellspacing="0" cellpadding="0" class="outer-frame">
+        <tr>
+            <td>
+
+                <table id="head" border="0" cellspacing="0" cellpadding="0" class="inner-frame rom-1"></table>
+
+            </td>
+        </tr>
+    </table>
+
+    <!-- data 1 -->
+
+    <table border="0" cellspacing="0" cellpadding="0" class="outer-frame">
+        <tr>
+            <td>
+
+                <table id="body" border="0" cellspacing="0" cellpadding="0" class="inner-frame rom-2"></table>
+
+            </td>
+        </tr>
+    </table>
+    <table border="0" cellspacing="0" cellpadding="0" class="outer-frame">
+        <tr>
+            <td>
+
+                <table id="tqcbody" border="0" cellspacing="0" cellpadding="0" class="inner-frame rom-3"></table>
+
+            </td>
+        </tr>
+    </table>
+    <p></p>
+    
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="img-rom">
+        <tr>
+            <td id="last">
+                
+
+            </td>
+        </tr>
+    </table>
+    <table border="0" cellspacing="0" cellpadding="0" class="inner-frame rom-page">
+        <tr class="page-ui">
+            <td id="pageInfo">  </td>
+        </tr>
+
+    </table>
+
+
+
+
+
+
+    <script type="text/javascript">
+        var PageCount = 10;
+        var PageCount1 = 5;
+        var currentPage = 0;
+        var currentPage1 = 1;
+        var totalPage = 0, totalPage1 = 0, totalPage2 = 0, totalPage3 = 0;
+        var tqcpage = 1, tqcpage1 = 1, tqcpage2 = 1, tqcpage3 = 1;
+        var datapage, datapage1, datapage2, datapage3;
+        var procpage;
+        var tmpdata;
+        var tmptqcdata;
+        var tmppage;
+        var sumpage;
+        var param;
+        var errormessage, tmpmessage;
+        var data, tqcdata, data1, tqcdata1, data2, tqcdata2;
+        var kanbanindex = 0;
+        var NowDate = new Date();
+        NowDate = (NowDate.getMonth() + 1) + '-' + NowDate.getDate() + '-' + NowDate.getFullYear();
+
+        if (!($(document).getUrlParam("LINEID"))) {
+            param = 'Kanban1';
+        }
+        else {
+            param = $(document).getUrlParam("LINEID");
+        }
+
+        if (param == 'Kanban1') {
+            urlstr1 = "getKanbanDataByLine.aspx/GetData1";
+            urlstrTQC1 = "getKanbanDataByLine.aspx/GetDataA";
+            urlstr2 = "getKanbanDataByLine.aspx/GetData2";
+            urlstrTQC2 = "getKanbanDataByLine.aspx/GetDataB";
+        }
+        else if (param == 'Kanban2') {
+            urlstr1 = "getKanbanDataByLine.aspx/GetData3";
+            urlstrTQC1 = "getKanbanDataByLine.aspx/GetDataC";
+            urlstr2 = "getKanbanDataByLine.aspx/GetData4";
+            urlstrTQC2 = "getKanbanDataByLine.aspx/GetDataD";
+            urlstr3 = "getKanbanDataByLine.aspx/GetData5";
+            urlstrTQC3 = "getKanbanDataByLine.aspx/GetDataE";
+        }
+        else if (param == 'ASY') {
+            urlstr1 = "getKanbanDataByLine.aspx/GetData6";
+            urlstrTQC1 = "getKanbanDataByLine.aspx/GetDataF";
+        }
+        else if (param == 'STF') {
+            urlstr1 = "getKanbanDataByLine.aspx/GetData7";
+            urlstrTQC1 = "getKanbanDataByLine.aspx/GetDataG";
+        }
+        // 還未調整 先註解掉 by alan
+        //$("body").click(function () {
+        //    showGrid();
+        //});
+
+
+        $(function () {
+            if (param == 'Kanban1') {
+                $.ajax({
+                    type: "POST",
+                    url: urlstr1,   //存取Json的網址
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        data = $.parseJSON(response.d.Data);   //將json字串轉換成對應的JS
+                        totalPage = Math.ceil(data.length / PageCount);   //無條件進位
+                    },
+                    error: function () {
+                        alert("ERROR!!!");
+                    }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: urlstrTQC1,   //存取Json的網址
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        tqcdata = $.parseJSON(response.d.Data);   //將json字串轉換成對應的JS
+                    },
+                    error: function () {
+                        alert("ERROR!!!");
+                    }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: urlstr2,   //存取Json的網址
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        data1 = $.parseJSON(response.d.Data);   //將json字串轉換成對應的JS
+                        totalPage1 = Math.ceil(data1.length / PageCount);   //無條件進位
+                    },
+                    error: function () {
+                        alert("ERROR!!!");
+                    }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: urlstrTQC2,   //存取Json的網址
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        tqcdata1 = $.parseJSON(response.d.Data);   //將json字串轉換成對應的JS
+                        settingPage();
+                        showTQCHead(tqcdata1, "ST2 TQC Data");
+                        showTQCGrid(tqcdata1, "ST2 TQC Data");
+                    },
+                    error: function () {
+                        alert("ERROR!!!");
+                    }
+                });
+            }
+            else if (param == 'Kanban2') {
+                $.ajax({
+                    type: "POST",
+                    url: urlstr1,   //存取Json的網址
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        data = $.parseJSON(response.d.Data);   //將json字串轉換成對應的JS
+                        totalPage = Math.ceil(data.length / PageCount);   //無條件進位
+                    },
+                    error: function () {
+                        alert("ERROR!!!");
+                    }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: urlstrTQC1,   //存取Json的網址
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        tqcdata = $.parseJSON(response.d.Data);   //將json字串轉換成對應的JS
+                    },
+                    error: function () {
+                        alert("ERROR!!!");
+                    }
+                });
+                $.ajax({
+                    type: "POST",
+                    url: urlstr2,   //存取Json的網址
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        data1 = $.parseJSON(response.d.Data);   //將json字串轉換成對應的JS
+                        totalPage1 = Math.ceil(data1.length / PageCount);   //無條件進位
+                    },
+                    error: function () {
+                        alert("ERROR!!!");
+                    }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: urlstrTQC2,   //存取Json的網址
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        tqcdata1 = $.parseJSON(response.d.Data);   //將json字串轉換成對應的JS
+                    },
+                    error: function () {
+                        alert("ERROR!!!");
+                    }
+                });
+                $.ajax({
+                    type: "POST",
+                    url: urlstr3,   //存取Json的網址
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        data2 = $.parseJSON(response.d.Data);   //將json字串轉換成對應的JS
+                        totalPage2 = Math.ceil(data2.length / PageCount);   //無條件進位
+                    },
+                    error: function () {
+                        alert("ERROR!!!");
+                    }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: urlstrTQC3,   //存取Json的網址
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        tqcdata2 = $.parseJSON(response.d.Data);   //將json字串轉換成對應的JS
+                        settingPage();
+                        showTQCHead(tqcdata2, "ST5 TQC Data");
+                        showTQCGrid(tqcdata2, "ST5 TQC Data");
+                    },
+                    error: function () {
+                        alert("ERROR!!!");
+                    }
+                });
+            }
+            else if (param == 'ASY') {
+                $.ajax({
+                    type: "POST",
+                    url: urlstr1,   //存取Json的網址
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        data = $.parseJSON(response.d.Data);   //將json字串轉換成對應的JS
+                        totalPage = Math.ceil(data.length / PageCount);   //無條件進位
+                    },
+                    error: function () {
+                        alert("ERROR!!!");
+                    }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: urlstrTQC1,   //存取Json的網址
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        tqcdata = $.parseJSON(response.d.Data);   //將json字串轉換成對應的JS
+                        settingPage();
+                        showTQCHead(tqcdata, "ASY TQC Data");
+                        showTQCGrid(tqcdata, "ASY TQC Data");
+                    },
+                    error: function () {
+                        alert("ERROR!!!");
+                    }
+                });
+            }
+            else if (param == 'STF') {
+                $.ajax({
+                    type: "POST",
+                    url: urlstr1,   //存取Json的網址
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        data = $.parseJSON(response.d.Data);   //將json字串轉換成對應的JS
+                        totalPage = Math.ceil(data.length / PageCount);   //無條件進位
+                    },
+                    error: function () {
+                        alert("ERROR!!!");
+                    }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: urlstrTQC1,   //存取Json的網址
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        tqcdata = $.parseJSON(response.d.Data);   //將json字串轉換成對應的JS
+                        settingPage();
+                        showTQCHead(tqcdata, "STF TQC Data");
+                        showTQCGrid(tqcdata, "STF TQC Data");
+                    },
+                    error: function () {
+                        alert("ERROR!!!");
+                    }
+                });
+            }
+
+
+            setInterval(function () {
+                showRound();
+            }
+                , 10000);
+
+            //function kanbanloop()
+            //{
+            //    showRound();
+            //    setTimeout("kanbanloop()",7000)
+            //}
+        })
+
+
+        setInterval(function () {
+            location.reload();
+        }
+            , 300000);
+
+        function settingPage() {
+            datapage = totalPage;
+            datapage1 = totalPage1;
+            datapage2 = totalPage2;
+
+            if (totalPage == 0) { datapage = 1; }
+            if (totalPage1 == 0) { datapage1 = 1; }
+            if (totalPage2 == 0) { datapage2 = 1; }
+
+            if (param == 'Kanban1') {
+                sumpage = datapage + datapage1 + tqcpage + tqcpage1;
+            }
+            else if (param == 'Kanban2') {
+                sumpage = datapage + datapage1 + datapage2 +
+                    tqcpage + tqcpage1 + tqcpage2;
+            }
+            else {
+                sumpage = datapage + tqcpage;
+            }
+
+        }
+
+        function showRound() {
+            kanbanindex++;
+            settingPage();
+            if (kanbanindex > sumpage) {
+                kanbanindex = 1;
+            }
+            if (param == 'Kanban1') {
+                if (kanbanindex <= datapage + tqcpage) {
+                    tmpdata = data;
+                    tmptqcdata = tqcdata;
+                    tmppage = datapage;
+                    tmpmessage = 'ST1';
+                    procpage = datapage;
+                }
+                else if (kanbanindex > datapage + tqcpage) {
+                    tmpdata = data1;
+                    tmptqcdata = tqcdata1;
+                    tmppage = datapage1 + datapage + tqcpage;
+                    tmpmessage = 'ST2';
+                    procpage = datapage1;
+                }
+            }
+            else if (param == 'Kanban2') {
+                if (kanbanindex <= datapage + tqcpage) {
+                    tmpdata = data;
+                    tmptqcdata = tqcdata;
+                    tmppage = datapage;
+                    tmpmessage = 'ST3';
+                    procpage = datapage;
+                }
+                else if (kanbanindex > datapage + tqcpage
+                    && kanbanindex <= datapage + tqcpage + datapage1 + tqcpage1) {
+                    tmpdata = data1;
+                    tmptqcdata = tqcdata1;
+                    tmppage = datapage1 + datapage + tqcpage;
+                    tmpmessage = 'ST4';
+                    procpage = datapage1;
+                }
+                else if (kanbanindex > datapage + tqcpage + datapage1 + tqcpage1) {
+                    tmpdata = data2;
+                    tmptqcdata = tqcdata2;
+                    tmppage = datapage + datapage1 + datapage2 + tqcpage + tqcpage1;
+                    tmpmessage = 'ST5';
+                    procpage = datapage2;
+                }
+            }
+            else if (param == 'ASY') {
+                tmpdata = data;
+                tmptqcdata = tqcdata;
+                tmppage = datapage;
+                tmpmessage = 'ASY';
+                procpage = datapage;
+            }
+            else {
+                tmpdata = data;
+                tmptqcdata = tqcdata;
+                tmppage = datapage;
+                tmpmessage = 'STF';
+                procpage = datapage;
+            }
+
+            showPage(tmpdata, tmptqcdata, tmppage, tmpmessage, procpage);
+        };
+        function showPage(tem, item1, itempage, itemmessage, procpage) {
+            var flag = 'A'
+            if (kanbanindex > itempage)
+                flag = 'B'
+
+            switch (flag) {
+                case 'A':
+                    if (item.length == 0) {
+                        itemmessage += " Product Data ";
+                    }
+                    else {
+                        itemmessage = "";
+                    }
+                    showHead(item, itemmessage);
+                    showGrid(item, procpage);
+                    break;
+                case 'B':
+                    if (item1.length == 0) {
+                        itemmessage += " TQC Data ";
+                    }
+                    else {
+                        itemmessage = "";
+                    }
+                    showTQCHead(item1, itemmessage);
+                    showTQCGrid(item1);
+                    break;
+            };
+
+        };
+
+
+        function showHead(item, itemmessage) {
+            if (item) {
+                $('#pageInfo').text(itemmessage + " Not Found !!! ");
+            }
+            $('#last').empty();
+            $('#body').empty();
+            $('#tqcbody').empty();
+            $('#head').empty();
+            $('#head').append(
+                "<tr><td>Line</td><td>Date</td><td>Responsibility</td><td>DL</td><td>RFT</td>" +
+                "</tr>");
+            $('#head').append("<tr>" +
+                "<td>" + item[0].LINE_ID + "</td>" +
+                "<td>" + NowDate + "</td>" +
+                "<td>" + item[0].RESPONSIBILITY + "</td>" +
+                "<td>" + item[0].DL + "</td> " +
+                "<td>" + item[0].TRFT + "</td></tr > ");
+
+        }
+
+        function showGrid(item, procpage) {
+            var isLast = false;
+            ++currentPage;
+            $('#last').empty();
+            if ((PageCount < item.length) && PageCount >= 10) {
+                $('#body').empty();
+                $('#body').append(
+                    "<tr class='text-direction-t'><td> Model Name </td> <td>  Model ID </td>" +
+                    "<td> Order # </td><td> PlanQty </td>" +
+                    "<td> Status </td><td> Actual Optput </td>" +
+                    " </tr>");
+                for (var i = PageCount - 10; i < PageCount; i++) {
+                    var colorStatus = item[i].PRODUCESTATUS;
+                    var colorName;
+                    if (colorStatus == 'On Process') {
+                        colorName = " class='color-blue' ";
+                    } else if (colorStatus == 'Complete') {
+                        colorName = " class='color-green' ";
+                    } else {
+                        colorName = " class='color-yellow' ";
+                    }
+                    $('#body').append(
+                        "<tr><td align = 'left'>" + item[i].MODELNAME + "</td>" +
+                        "<td>" + item[i].MODELNO + "</td>" +
+                        "<td align = 'left'>" + item[i].SAMPLENO + "</td>" +
+                        "<td>" + item[i].PLANQTY + "</td>" +
+                        "<td" + colorName + ">" + item[i].PRODUCESTATUS + "</td>" +
+                        "<td>" + item[i].PRODUCEQTY + "</td></tr>");
+                }
+            }
+            if (procpage > 0) {
+                $('#pageInfo').text(" Page:" + currentPage + " /" + " Total Page:" + procpage);
+            }
+
+
+            if (PageCount >= item.length) {
+                ++currentPage;
+                $('#body').empty();
+                $('#body').append(
+                    "<tr class='text-direction-t'><td> Model Name </td> <td>  Model ID </td>" +
+                    "<td> Order # </td><td> PlanQty </td>" +
+                    "<td> Status </td><td> Actual Optput </td>" +
+                    " </tr>");
+                for (var i = PageCount - 10; i < item.length; i++) {
+                    var colorStatus = item[i].PRODUCESTATUS;
+                    var colorName;
+                    if (colorStatus == 'On Process') {
+                        colorName = " class='color-blue' ";
+                    } else if (colorStatus == 'Complete') {
+                        colorName = " class='color-green' ";
+                    } else {
+                        colorName = " class='color-yellow' ";
+                    }
+                    $('#body').append(
+                        "<tr><td align = 'left'>" + item[i].MODELNAME + "</td>" +
+                        "<td>" + item[i].MODELNO + "</td>" +
+                        "<td align = 'left'>" + item[i].SAMPLENO + "</td>" +
+                        "<td>" + item[i].PLANQTY + "</td>" +
+                        "<td" + colorName + ">" + item[i].PRODUCESTATUS + "</td>" +
+                        "<td>" + item[i].PRODUCEQTY + "</td></tr>");
+                }
+                isLast = true;
+                PageCount = 10;
+                currentPage = 0;
+            }
+            if (isLast == false) {
+                PageCount += 10;
+            }
+
+        }
+
+
+        function showTQCHead(item,item1, itemmessage) {
+            if (item1) {
+                $('#pageInfo').text(itemmessage + " Not Found !!! ");
+            }
+            $('#last').empty();
+            $('#tqcbody').empty();
+            $('#body').empty();
+            //$('#head').empty();
+            //$('#head').append(
+            //    "<tr><td>Line</td><td>Date</td><td>Responsibility</td><td>DL</td><td>RFT</td>" +
+            //    "</tr>");
+            //$('#head').append("<tr>" +
+            //    "<td>" + item1[0].LINE_ID + "</td>" +
+            //    "<td>" + NowDate + "</td>" +
+            //    "<td>" + item1[0].RESPONSIBILITY + "</td>" +
+            //    "<td>" + item1[0].DL + "</td>" +
+            //    "<td>" + item[0].TRFT + "</td></tr > ");
+
+        }
+
+        function showTQCGrid(item1) {
+            currentPage1 = 1, procpage = 1
+            $('#pageInfo').text(" Page:" + currentPage1 + " /" + " Total Page:" + procpage);
+            $('#last').empty();
+            $('#tqcbody').empty();
+            $('#tqcbody').append(
+                "<tr class='text-direction-t'><td colspan='3'> Top 5 Defect </td></tr>" +
+                "<tr class='text-direction-t'><td> Defect Code </td><td> Defect Name </td><td> Times</td></tr>");
+            for (var i = 0; i < item1.length; i++) {
+                $('#tqcbody').append(
+                    "<tr><td align='center' >" + item1[i].DEFECTCODE + "</td>" +
+                    "<td>" + item1[i].DEFECTNAME_EN + "</td>" +
+                    "<td align='center' >" + item1[i].DEFECT_TIMES + "</td></tr>");
+                //"<td align='center' ><IMG SRC='data: image /jpg; base64," + data1[i].PICTURE + "'/> </td></tr>");
+            }
+
+            var strBady = "";
+
+            
+            for (var i = 0; i < 3; i++) {
+                if (i < item1.length) {
+                    strBady += "<img src='data:image/png; base64," + item1[i].PICTURE + "'/> ";
+                }
+                else
+                    strBady += "";
+            }
+            strBady += "";
+            $('#last').empty();
+            $('#last').append(strBady);
+
+            //for (var i = PageCount1 - 5; i < PageCount1; i++) {
+            //$('#body').append(
+            //    "<tr><td align='center' ><IMG SRC='data: image /jpg; base64," + data1[1].Piceture + "'/> </td>" +
+            //        "<td>"+"</td>" +
+            //    "<td align='center' >"+"</td></tr>");
+            //}
+
+
+        }
+
+
+
+    </script>
+
+</body>
+</html>
